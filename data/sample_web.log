@@ -1,0 +1,5 @@
+192.0.2.1 - - [06/Oct/2026] "GET /search?q=' OR '1'='1 HTTP/1.1" 200 512
+192.0.2.2 - - [06/Oct/2026] "GET /item?id=1 UNION SELECT username,password FROM users HTTP/1.1" 200 1024
+192.0.2.3 - - [06/Oct/2026] "GET /comment?msg=<script>alert(document.cookie)</script> HTTP/1.1" 200 256
+192.0.2.4 - - [06/Oct/2026] "GET /files?path=../../etc/passwd HTTP/1.1" 403 128
+192.0.2.5 - - [06/Oct/2026] "GET /home HTTP/1.1" 200 2048

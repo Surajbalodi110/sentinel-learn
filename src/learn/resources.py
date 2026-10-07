@@ -1,0 +1,28 @@
+"""Curated defensive-security links. Rendered in-dashboard with 1-click open + embedded preview."""
+
+RESOURCES = [
+    {"name": "MITRE ATT&CK", "cat": "Framework",
+     "url": "https://attack.mitre.org/",
+     "desc": "The map of adversary tactics (T1110 brute-force, T1190 exploit, T1566 phishing). Every finding here links to it."},
+    {"name": "MITRE D3FEND", "cat": "Defense",
+     "url": "https://d3fend.mitre.org/",
+     "desc": "Defensive countermeasures mapped against ATT&CK — what to actually configure."},
+    {"name": "CERT-In (India)", "cat": "National CERT",
+     "url": "https://www.cert-in.org.in/",
+     "desc": "Indian Computer Emergency Response Team — advisories, guidelines, incident reporting."},
+    {"name": "CISA KEV Catalog", "cat": "Trending threats",
+     "url": "https://www.cisa.gov/knownExploitedVulnerabilitiesCatalog",
+     "desc": "Bugs actively exploited in the wild. Patch these first — same feed as Trending tab."},
+    {"name": "CISA Cyber Training", "cat": "Learn",
+     "url": "https://www.cisa.gov/cybersecurity-training-exercises",
+     "desc": "Free US-CERT training exercises and SOC basics."},
+    {"name": "NVD (NIST)", "cat": "Vulnerabilities",
+     "url": "https://nvd.nist.gov/",
+     "desc": "Look up any CVE ID from the Trending tab for severity + fix details."},
+    {"name": "OWASP Top 10", "cat": "Web defense",
+     "url": "https://owasp.org/www-project-top-ten/",
+     "desc": "Top web risks (injection, XSS). Read A03 Injection after scanning sample_web.log."},
+    {"name": "OWASP Cheat Sheets", "cat": "Fix guides",
+     "url": "https://cheatsheetseries.owasp.org/",
+     "desc": "Copy-paste secure code patterns for SQLi/XSS/auth fixes."},
+]

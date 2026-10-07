@@ -1,0 +1,9 @@
+detection:
+  brute_force_threshold: 5   # failed logins from one IP to trigger HIGH
+  phishing_high_score: 70
+  phishing_medium_score: 40
+watch:
+  interval_seconds: 15
+intel:
+  kev_url: https://www.cisa.gov/sites/default/files/csv/known_exploited_vulnerabilities.csv
+  cache_file: data/kev_cache.json

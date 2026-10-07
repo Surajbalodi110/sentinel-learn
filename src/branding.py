@@ -1,0 +1,5 @@
+"""Branding: creator + builder credit. Edit CREATOR_NAME to change footer."""
+CREATOR_NAME = "Cyberguru"
+TOOL_NAME = "SentinelLearn"
+TAGLINE = "Learn defensive cybersecurity by doing — beginner-friendly SOC lab"
+BUILDER_LINE = "Built with OpenCode AI (Muse Spark 1.3 Free)"

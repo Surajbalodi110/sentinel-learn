@@ -1,0 +1,10 @@
+.env
+__pycache__/
+.pytest_cache/
+.venv/
+*.pyc
+data/kev_cache.json
+data/progress.json
+data/users.db
+data/feedback.jsonl
+sample-cert.png

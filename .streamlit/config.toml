@@ -1,0 +1,7 @@
+[client]
+# Production: users see a friendly message instead of tracebacks.
+# Set to true while developing locally.
+showErrorDetails = false
+
+[server]
+headless = true
