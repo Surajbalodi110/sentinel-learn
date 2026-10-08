@@ -67,7 +67,10 @@ def _tutor_stream_here():
     """Stream the pending reply exactly where this is called, then normalize."""
     import html as _h
     from src.learn.chatbot import answer_stream, answer as _ans
-    q = st.session_state.pop("pending_q", None)
+    try:
+        q = st.session_state.pop("pending_q", None)
+    except Exception:
+        q = None
     if not q:
         return
     box = st.empty()
@@ -79,10 +82,16 @@ def _tutor_stream_here():
             box.markdown(f'<div class="cb-bot">{_tutor_icon(22)} {_h.escape(full)}▍</div>', unsafe_allow_html=True)
     except Exception:
         full = ""
-    if full.strip():
-        st.session_state.hist.append(("bot", full))
-    else:
-        st.session_state.hist.append(("bot", _ans(q)))
+    try:
+        if full.strip():
+            st.session_state.hist.append(("bot", full))
+        else:
+            st.session_state.hist.append(("bot", _ans(q)))
+    except Exception:
+        try:
+            st.session_state.hist.append(("bot", "Hmm, that hiccuped — ask again?"))
+        except Exception:
+            pass
     st.rerun()
 
 _NAV = [

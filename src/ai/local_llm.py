@@ -26,7 +26,7 @@ def status(timeout: int = 2, refresh: bool = False) -> dict:
     if not refresh and now - _cache["ts"] < 30:
         return {"ok": _cache["ok"], "models": list(_cache["models"])}
     try:
-        r = httpx.get(base_url() + "/api/tags", timeout=timeout)
+        r = httpx.get(base_url() + "/api/tags", timeout=timeout, trust_env=False)
         r.raise_for_status()
         models = [m.get("name", "") for m in r.json().get("models", [])]
         _cache.update(ok=True, models=models, ts=now)
@@ -44,7 +44,7 @@ def ask(q: str, model: str = "", timeout: int = 120) -> str | None:
     if st["models"] and not any(m in x for x in st["models"]):
         return None
     try:
-        r = httpx.post(base_url() + "/api/chat", timeout=timeout, json={
+        r = httpx.post(base_url() + "/api/chat", timeout=timeout, trust_env=False, json={
             "model": m, "stream": False,
             "messages": [{"role": "system", "content": SYSTEM},
                          {"role": "user", "content": q}]})
@@ -70,7 +70,7 @@ def stream(q: str, model: str = "", timeout: int = 300):
     if st["models"] and not any(m in x for x in st["models"]):
         return
     try:
-        with httpx.stream("POST", base_url() + "/api/chat", timeout=timeout, json={
+        with httpx.stream("POST", base_url() + "/api/chat", timeout=timeout, trust_env=False, json={
                 "model": m, "stream": True,
                 "messages": [{"role": "system", "content": SYSTEM},
                              {"role": "user", "content": q}]}) as r:
