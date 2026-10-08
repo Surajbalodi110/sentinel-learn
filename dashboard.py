@@ -449,7 +449,9 @@ div[data-testid="stPlotlyChart"] { width: 100%; }
   textarea, input { font-size: 16px !important; }
 }
 </style>
-""", unsafe_allow_html=True)
+""".replace("body.dark", 'div[data-testid="stAppViewContainer"]:has(#themedark)'), unsafe_allow_html=True)
+if _dark:
+    st.markdown('<span id="themedark"></span>', unsafe_allow_html=True)
 
 def _asset(*names: str) -> str | None:
     """Absolute asset path that works regardless of Streamlit's working directory."""
@@ -593,10 +595,6 @@ st.markdown(f"""
   <a class="theme-link" href="{_link('guide')}" target="_self">📖 Guide</a>
 </div>
 """, unsafe_allow_html=True)
-components.html(
-    "<script>try{window.parent.document.body.classList.toggle('dark',__DARK__);}catch(e){}</script>".replace(
-        "__DARK__", "true" if _dark else "false"),
-    height=0)
 _render_navbar(nav)
 
 def _need_login() -> bool:
@@ -1800,94 +1798,7 @@ components.html("""
   }
   var tries = 0;
   var iv = setInterval(function () { tries++; if (pin() || tries > 60) clearInterval(iv); }, 250);
-  // size helper iframes directly: games get a tall frame, pin/theme helpers collapse
-  function sizeFrames() {
-    try {
-      var doc = window.parent.document;
-      var fr = doc.querySelectorAll('iframe[srcdoc]');
-      for (var i = 0; i < fr.length; i++) {
-        var sd = fr[i].getAttribute('srcdoc') || '';
-        var game = (sd.indexOf('arcade-game') !== -1) || (sd.indexOf('ascore') !== -1);
-        var c = fr[i].closest('[data-testid="stElementContainer"]');
-        if (game) {
-          if (c) { c.style.height = 'auto'; c.style.minHeight = '560px'; c.style.overflow = 'visible'; c.style.margin = ''; c.style.padding = ''; }
-          fr[i].style.height = '560px'; fr[i].style.minHeight = '560px';
-          fr[i].style.display = 'block'; fr[i].style.border = '0'; fr[i].style.width = '100%';
-        } else {
-          if (c) { c.style.height = '0px'; c.style.minHeight = '0px'; c.style.overflow = 'hidden'; c.style.margin = '0'; c.style.padding = '0'; }
-          fr[i].style.height = '0px'; fr[i].style.minHeight = '0px'; fr[i].style.border = '0';
-        }
-      }
-    } catch (e) {}
-  }
-  setInterval(sizeFrames, 1000);
-  // dock any open popover panel bottom-right above the button
-  function dock(panel) {
-    var s = panel.style;
-    s.position = 'fixed'; s.bottom = '96px'; s.right = '22px';
-    s.top = 'auto'; s.left = 'auto'; s.transform = 'none';
-    s.width = '385px'; s.maxWidth = '92vw'; s.maxHeight = '70vh';
-    s.overflowY = 'auto'; s.zIndex = '1001';
-    s.borderRadius = '16px';
-    s.boxShadow = '0 16px 48px rgba(0,0,0,.3)';
-  }
-  function isTutorPanel(el) {
-    try {
-      var t = el.textContent || "";
-      return t.indexOf("Cyberguru Tutor") !== -1 && t.indexOf("Ask anything") !== -1;
-    } catch (e) { return false; }
-  }
-  function sweep(root) {
-    try {
-      var doc = window.parent.document;
-      var scope = root || doc;
-      var found = [];
-      if (scope.querySelectorAll) {
-        var q = scope.querySelectorAll('[data-testid="stPopoverBody"]');
-        for (var i = 0; i < q.length; i++) found.push(q[i]);
-      }
-      for (var k = 0; k < found.length; k++) {
-        if (isTutorPanel(found[k])) dock(found[k]);
-      }
-      fixSelects(doc);
-    } catch (e) {}
-  }
-  // force readable select text in dark mode (menus portal outside widgets, CSS can't pin them)
-  function fixSelects(doc) {
-    try {
-      if (!doc.body.classList.contains('dark')) return;
-      var boxes = doc.querySelectorAll('[data-testid="stSelectbox"]');
-      for (var i = 0; i < boxes.length; i++) {
-        var inner = boxes[i].querySelectorAll('div');
-        for (var j = 0; j < inner.length; j++) {
-          if (!inner[j].querySelector('[role="listbox"]')) inner[j].style.color = '#eaf2f8';
-        }
-      }
-      var opts = doc.querySelectorAll('[role="listbox"] [role="option"], [data-baseweb="menu"] [role="option"], [data-baseweb="menu"] li');
-      for (var k = 0; k < opts.length; k++) {
-        if (opts[k].getAttribute('aria-selected') === 'true') {
-          opts[k].style.color = '#ffffff';
-        } else {
-          opts[k].style.color = '#16202e';
-          opts[k].style.background = '';
-        }
-      }
-      var lists = doc.querySelectorAll('[role="listbox"]');
-      for (var m = 0; m < lists.length; m++) lists[m].style.background = '#ffffff';
-    } catch (e) {}
-  }
-  try {
-    var obs = new MutationObserver(function (muts) {
-      for (var i = 0; i < muts.length; i++) {
-        var nodes = muts[i].addedNodes;
-        for (var j = 0; j < nodes.length; j++) {
-          if (nodes[j].nodeType === 1) sweep(nodes[j]);
-        }
-      }
-    });
-    obs.observe(window.parent.document.body, { childList: true, subtree: true });
-    setTimeout(function () { try { fixSelects(window.parent.document); } catch (e) {} }, 1200);
-  } catch (e) {}
+  // arcade game frames size themselves via the height parameter; no other helpers remain.
 })();
 </script>
 """.replace("__AVATAR__", _tutor_avatar_uri()), height=0)
