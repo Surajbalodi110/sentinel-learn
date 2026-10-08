@@ -16,7 +16,7 @@ from src.ai.explainer import explain
 from src.learn.curriculum import COURSE
 from src.learn.resources import RESOURCES
 from src.learn.chatbot import answer as tutor_answer
-from src.branding import CREATOR_NAME, TOOL_NAME, TAGLINE, BUILDER_LINE
+from src.branding import CREATOR_NAME, TOOL_NAME, TAGLINE
 
 try:
     import plotly.graph_objects as go
@@ -1719,7 +1719,7 @@ if nav == "about":
 <div class="def"><div class="ic">🟡</div><div><b class="t">MEDIUM — 10 pts</b><span class="d">Suspicious, needs review this week (traversal, odd link).</span></div></div>
 <div class="def"><div class="ic">🟢</div><div><b class="t">LOW — 3 pts</b><span class="d">Weak signal or hygiene note. Monitor.</span></div></div>
 """, unsafe_allow_html=True)
-    st.caption(f"Created by {CREATOR_NAME} • {BUILDER_LINE} • Defensive learning only: synthetic sample data. For real incidents contact your SOC / CERT-In.")
+    st.caption(f"Created by {CREATOR_NAME} • Defensive learning only: synthetic sample data. For real incidents contact your SOC / CERT-In.")
 
 # ---------- footer + floating tutor button (bottom-right, every page) ----------
 st.markdown(f"""
@@ -1751,7 +1751,7 @@ st.markdown(f"""
       <a href="{_link('guide')}" target="_self">User guide + feedback</a>
       <a href="{_link('resources')}" target="_self">All resources</a>
       <span class="sf-note">Created by <b>{CREATOR_NAME}</b></span>
-      <span class="sf-note">{BUILDER_LINE}</span>
+      <span class="sf-note">Created by <b>{CREATOR_NAME}</b></span>
     </div>
     <div class="sf-brand">
       <div style="font-weight:700;font-size:1.05rem">🛡️ {TOOL_NAME} <span style="font-weight:400;font-size:.8rem;opacity:.7">by {CREATOR_NAME}</span></div>
@@ -1759,7 +1759,7 @@ st.markdown(f"""
       <p class="sf-note">Defensive learning only — synthetic sample data. For real incidents contact your SOC / CERT-In.</p>
     </div>
   </div>
-  <div class="sf-bottom">Created by <b>{CREATOR_NAME}</b> • {BUILDER_LINE}</div>
+  <div class="sf-bottom">Created by <b>{CREATOR_NAME}</b></div>
 </div>
 <div class="fab-hint">👋 <b>Questions on cybersecurity?</b><br>Tap your tutor below — ask anything!</div>
 """, unsafe_allow_html=True)
