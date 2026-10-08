@@ -18,6 +18,20 @@ def default_model() -> str:
     import os
     return os.getenv("OLLAMA_MODEL", "llama3.1")
 
+def _port_open(timeout: float = 1.0) -> bool:
+    """Fast localhost check with raw sockets (no proxy/DNS weirdness)."""
+    import socket
+    from urllib.parse import urlparse
+    try:
+        u = urlparse(base_url())
+        host, port = u.hostname or "127.0.0.1", u.port or 11434
+        s = socket.create_connection((host, port), timeout=timeout)
+        s.close()
+        return True
+    except Exception:
+        return False
+
+
 def status(timeout: int = 2, refresh: bool = False) -> dict:
     """Is Ollama reachable + which models are pulled? Cached 30s. Never raises."""
     import time
@@ -25,6 +39,9 @@ def status(timeout: int = 2, refresh: bool = False) -> dict:
     now = time.time()
     if not refresh and now - _cache["ts"] < 30:
         return {"ok": _cache["ok"], "models": list(_cache["models"])}
+    if not _port_open():
+        _cache.update(ok=False, models=[], ts=now)
+        return {"ok": False, "models": []}
     try:
         r = httpx.get(base_url() + "/api/tags", timeout=timeout, trust_env=False)
         r.raise_for_status()
@@ -34,7 +51,7 @@ def status(timeout: int = 2, refresh: bool = False) -> dict:
         _cache.update(ok=False, models=[], ts=now)
     return {"ok": _cache["ok"], "models": list(_cache["models"])}
 
-def ask(q: str, model: str = "", timeout: int = 120) -> str | None:
+def ask(q: str, model: str = "", timeout: int = 20) -> str | None:
     """Ask the local model. Returns text or None (unreachable/no model/fail)."""
     import httpx
     st = status()
@@ -59,7 +76,7 @@ def _content_of(obj: dict) -> str:
     except Exception:
         return ""
 
-def stream(q: str, model: str = "", timeout: int = 300):
+def stream(q: str, model: str = "", timeout: int = 60):
     """Yield text chunks as the local model generates. Yields nothing if unavailable."""
     import httpx
     import json
