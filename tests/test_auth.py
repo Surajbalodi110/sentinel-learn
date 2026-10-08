@@ -66,3 +66,11 @@ def test_no_tracebacks_for_users():
     s = open(p, encoding="utf-8").read()
     compact = s.replace(" ", "")
     assert "showErrorDetails=false" in compact
+
+
+def test_restore_runs_once_per_session():
+    import os
+    s = open(os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "dashboard.py")),
+             encoding="utf-8").read()
+    assert 'if "_restored" not in st.session_state:' in s, \
+        "guest restore must run once per session or it wipes in-flight state"

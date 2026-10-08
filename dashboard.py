@@ -37,24 +37,30 @@ for k, v in {"extra_auth": [], "extra_web": [], "extra_urls": [],
              "lesson_idx": 0, "last_findings": []}.items():
     st.session_state.setdefault(k, v)
 
-# restore progress wiped by full-page nav reloads (single local profile)
-try:
-    from src.state.store import load as _load_progress, save as _save_progress
-    _saved = _load_progress()
-    if _saved:
-        st.session_state.hist = [tuple(x) for x in _saved.get("hist", [])][-50:] or st.session_state.hist
-        st.session_state.done_lessons = set(_saved.get("done_lessons", []))
-        st.session_state.reviewed = set(_saved.get("reviewed", []))
-        st.session_state.lesson_idx = int(_saved.get("lesson_idx", 0) or 0)
-        st.session_state.last_findings = _saved.get("last_findings", []) or []
-        if _saved.get("room_applied"):
-            st.session_state["room_applied"] = _saved["room_applied"]
-        if isinstance(_saved.get("sim_best"), dict):
-            st.session_state["sim_best"] = _saved["sim_best"]
-        if _saved.get("user_name"):
-            st.session_state["user_name"] = _saved["user_name"]
-except Exception:
-    pass
+# restore progress wiped by full-page nav reloads (single local profile).
+# Fresh sessions ONLY: reruns must keep in-memory state, or every
+# st.rerun() (e.g. tutor submit) would wipe the just-added message.
+if "_restored" not in st.session_state:
+    try:
+        from src.state.store import load as _load_progress, save as _save_progress
+        _saved = _load_progress()
+        if _saved:
+            st.session_state.hist = [tuple(x) for x in _saved.get("hist", [])][-50:] or st.session_state.hist
+            st.session_state.done_lessons = set(_saved.get("done_lessons", []))
+            st.session_state.reviewed = set(_saved.get("reviewed", []))
+            st.session_state.lesson_idx = int(_saved.get("lesson_idx", 0) or 0)
+            st.session_state.last_findings = _saved.get("last_findings", []) or []
+            if _saved.get("room_applied"):
+                st.session_state["room_applied"] = _saved["room_applied"]
+            if isinstance(_saved.get("sim_best"), dict):
+                st.session_state["sim_best"] = _saved["sim_best"]
+            if _saved.get("user_name"):
+                st.session_state["user_name"] = _saved["user_name"]
+    except Exception:
+        pass
+    st.session_state._restored = True
+else:
+    from src.state.store import save as _save_progress
 
 # ---------- docked tutor panel (opens from the bottom-right button) ----------
 def _tutor_respond(q: str):
